@@ -22,6 +22,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 22.x
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - uses: actions/checkout@v3
         with:
@@ -29,27 +33,27 @@ jobs:
 
       - _include: checkout-and-merge-pro
 
-      - name: yarn install
+      - name: pnpm install
         run: |
           cd ../dbgate-merged
-          yarn install
+          pnpm install
 
       - name: Build packer dist for cypress
         run: |
           cd ../dbgate-merged
-          yarn prepare:packer
+          pnpm prepare:packer
 
-      - name: yarn install cypress
+      - name: pnpm install cypress
         run: |
           cd ../dbgate-merged
           cd e2e-tests
-          yarn install
+          pnpm install
 
       - name: Run Cypress tests
         run: |
           cd ../dbgate-merged
           cd e2e-tests
-          yarn test:ci
+          pnpm test:ci
 
       - name: ls -R
         run: |

@@ -29,6 +29,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 22.x
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
       - name: Checkout dbgate/dbgate-pro
         uses: actions/checkout@v2
         with:
@@ -44,7 +48,7 @@ jobs:
           mkdir dbgate-merged
           cd dbgate-pro
           cd sync
-          yarn
+          pnpm install
           node sync.js --nowatch
           cd ..
       - name: adjustNpmPackageJsonPremium
@@ -59,16 +63,16 @@ jobs:
           cd ..
           cd dbgate-merged
           rm -rf packages/dbmodel
-      - name: yarn install
+      - name: pnpm install
         run: |
           cd ..
           cd dbgate-merged
-          yarn install
+          pnpm install
       - name: setCurrentVersion
         run: |
           cd ..
           cd dbgate-merged
-          yarn setCurrentVersion
+          pnpm setCurrentVersion
       - name: Compute npm dist-tag
         run: |
           if [[ "${GITHUB_REF_NAME}" =~ -alpha\. ]]; then

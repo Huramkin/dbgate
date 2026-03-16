@@ -136,22 +136,22 @@ jobs:
         run: |
           <<cd_merged>>
           node setUpdaterChannel <<channel>>
-      - name: yarn set timeout
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - name: pnpm install
         run: |
           <<cd_merged>>
-          yarn config set network-timeout 100000
-      - name: yarn install
-        run: |
-          <<cd_merged>>
-          yarn install
+          pnpm install
       - name: setCurrentVersion
         run: |
           <<cd_merged>>
-          yarn setCurrentVersion
+          pnpm setCurrentVersion
       - name: fillPackagedPlugins
         run: |
           <<cd_merged>>
-          yarn fillPackagedPlugins
+          pnpm fillPackagedPlugins
       - name: Install Snapcraft
         _if: _community
         if: matrix.os == 'ubuntu-22.04'
@@ -161,7 +161,7 @@ jobs:
         if: matrix.os == 'windows-2022'
         run: |
           <<cd_merged>>
-          yarn run build:app
+          pnpm run build:app
         # env:
         #   GH_TOKEN: ${{ secrets.GH_TOKEN }} # token for electron publish
 
@@ -169,7 +169,7 @@ jobs:
         if: matrix.os == 'macos-14'
         run: |
           <<cd_merged>>
-          yarn run build:app
+          pnpm run build:app
         env:
           # GH_TOKEN: ${{ secrets.GH_TOKEN }} # token for electron publish
           CSC_LINK: ${{ secrets.APPLECERT_CERTIFICATE }}
@@ -183,7 +183,7 @@ jobs:
         if: matrix.os == 'ubuntu-22.04'
         run: |
           <<cd_merged>>
-          yarn run build:app
+          pnpm run build:app
         env:
           # GH_TOKEN: ${{ secrets.GH_TOKEN }} # token for electron publish
           SNAPCRAFT_STORE_CREDENTIALS: ${{secrets.SNAPCRAFT_LOGIN}}
@@ -191,7 +191,7 @@ jobs:
       - name: generatePadFile
         _if: _community_stable
         run: |
-          yarn generatePadFile
+          pnpm generatePadFile
 
       - name: Azure login (OIDC)
         uses: azure/login@v2
@@ -219,7 +219,7 @@ jobs:
         if: matrix.os == 'windows-2022'
         run: |
           <<cd_merged>>
-          yarn run fixYmlHashes
+          pnpm run fixYmlHashes
 
       - name: Copy artifacts
         run: |

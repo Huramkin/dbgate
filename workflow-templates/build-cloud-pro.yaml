@@ -29,6 +29,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 22.x
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - name: Install jq
         run: |
@@ -47,23 +51,23 @@ jobs:
           cd dbgate-merged
           node adjustPackageJson --premium
 
-      - name: yarn install
+      - name: pnpm install
         run: |
           cd ..
           cd dbgate-merged
-          yarn install
+          pnpm install
 
       - name: setCurrentVersion
         run: |
           cd ..
           cd dbgate-merged
-          yarn setCurrentVersion
+          pnpm setCurrentVersion
           
       - name: Prepare packer build
         run: |
           cd ..
           cd dbgate-merged
-          yarn run prepare:packer
+          pnpm run prepare:packer
           cd packer
           zip -r cloud-build.zip build
 

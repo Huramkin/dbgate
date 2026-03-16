@@ -23,11 +23,15 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 22
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
       - name: Install dependencies
         run: |
           rm package.json
-          rm yarn.lock
-          yarn add -W js-yaml lodash
+          rm pnpm-lock.yaml
+          pnpm add -w js-yaml lodash
       - name: Run workflow generation
         run: |
           node common/processWorkflows.js

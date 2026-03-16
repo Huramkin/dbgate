@@ -45,22 +45,22 @@ jobs:
         run: |
 
           node adjustPackageJson --community
-      - name: yarn set timeout
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - name: pnpm install
         run: |
 
-          yarn config set network-timeout 100000
-      - name: yarn install
-        run: |
-
-          yarn install
+          pnpm install
       - name: setCurrentVersion
         run: |
 
-          yarn setCurrentVersion
+          pnpm setCurrentVersion
       - name: fillPackagedPlugins
         run: |
 
-          yarn fillPackagedPlugins
+          pnpm fillPackagedPlugins
       - name: Install Snapcraft
         if: matrix.os == 'ubuntu-22.04'
         uses: samuelmeuli/action-snapcraft@v1
@@ -68,12 +68,12 @@ jobs:
         if: matrix.os == 'windows-2022'
         run: |
 
-          yarn run build:app
+          pnpm run build:app
       - name: Publish MacOS
         if: matrix.os == 'macos-14'
         run: |
 
-          yarn run build:app
+          pnpm run build:app
         env:
           CSC_LINK: ${{ secrets.APPLECERT_CERTIFICATE }}
           CSC_KEY_PASSWORD: ${{ secrets.APPLECERT_PASSWORD }}
@@ -85,7 +85,7 @@ jobs:
         if: matrix.os == 'ubuntu-22.04'
         run: |
 
-          yarn run build:app
+          pnpm run build:app
         env:
           SNAPCRAFT_STORE_CREDENTIALS: ${{secrets.SNAPCRAFT_LOGIN}}
       - name: Azure login (OIDC)
@@ -110,7 +110,7 @@ jobs:
         if: matrix.os == 'windows-2022'
         run: |
 
-          yarn run fixYmlHashes
+          pnpm run fixYmlHashes
       - name: Copy artifacts
         run: |
           mkdir artifacts          
