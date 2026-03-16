@@ -411,10 +411,13 @@ function createWindow() {
   // mainWindow.setMenu(mainMenu);
 
   function loadMainWindow() {
+    const distIndex = path.join(__dirname, '../packages/web/dist/index.html');
+    const publicIndex = path.join(__dirname, '../packages/web/public/index.html');
+    const defaultPath = fs.existsSync(distIndex) ? distIndex : publicIndex;
     const startUrl =
       process.env.ELECTRON_START_URL ||
       url.format({
-        pathname: path.join(__dirname, '../packages/web/public/index.html'),
+        pathname: defaultPath,
         protocol: 'file:',
         slashes: true,
       });
