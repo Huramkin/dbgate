@@ -115,27 +115,6 @@ registerCommand({
   },
 });
 
-registerCommand({
-  id: 'new.connectionOnCloud',
-  toolbar: true,
-  icon: 'img cloud-connection',
-  toolbarName: __t('command.new.connection', { defaultMessage: 'Add connection' }),
-  category: __t('command.new', { defaultMessage: 'New' }),
-  toolbarOrder: 1,
-  name: __t('command.new.connectionCloud', { defaultMessage: 'Connection on Cloud' }),
-  testEnabled: () =>
-    !getCurrentConfig()?.runAsPortal && !getCurrentConfig()?.storageDatabase && !!getCloudSigninTokenHolder(),
-  onClick: () => {
-    openNewTab({
-      title: _t('common.newConnectionCloud', { defaultMessage: 'New Connection on Cloud' }),
-      icon: 'img cloud-connection',
-      tabComponent: 'ConnectionTab',
-      props: {
-        saveOnCloud: true,
-      },
-    });
-  },
-});
 
 registerCommand({
   id: 'new.connection.folder',
@@ -829,15 +808,6 @@ if (hasPermission('settings/change')) {
   //   testEnabled: () => hasPermission('settings/change'),
   // });
 }
-
-registerCommand({
-  id: 'cloud.logout',
-  category: __t('command.cloud', { defaultMessage: 'Cloud' }),
-  name: __t('command.cloud.logout', { defaultMessage: 'Logout' }),
-  onClick: () => {
-    cloudSigninTokenHolder.set(null);
-  },
-});
 
 registerCommand({
   id: 'file.exit',

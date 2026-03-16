@@ -196,13 +196,6 @@
       </div>
     {/if}
 
-    {#if $cloudSigninTokenHolder?.email}
-      <div class="item">
-        <FontIcon icon="icon cloud" padRight />
-        {$cloudSigninTokenHolder?.email}
-      </div>
-    {/if}
-
     {#if $appUpdateStatus}
       <div class="item">
         <FontIcon icon={$appUpdateStatus.icon} padRight />

@@ -225,7 +225,8 @@ function start() {
     startCloudUpgradeTimer();
   }
 
-  startCloudFiles();
+  // Cloud disabled
+  // startCloudFiles();
 }
 
 function useAllControllers(app, electron) {

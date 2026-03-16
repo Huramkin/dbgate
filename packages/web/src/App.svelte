@@ -57,10 +57,7 @@
         subscribeConnectionPingers();
         subscribePermissionCompiler();
         installNewVolatileConnectionListener();
-        installNewCloudTokenListener();
         initializeAppUpdates();
-        installCloudListeners();
-        refreshPublicCloudFiles();
         saveSelectedLanguageToCache(config.preferrendLanguage);
 
         const electron = getElectron();

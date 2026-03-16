@@ -45,16 +45,6 @@
       name: 'opened-tabs',
       title: _t('widgets.openedTabs', { defaultMessage: 'Opened tabs' }),
     },
-    getCurrentConfig().allowPrivateCloud && {
-      name: 'cloud-private',
-      title: _t('widgets.dbgateCloud', { defaultMessage: 'DbGate Cloud' }),
-      icon: 'icon cloud-private',
-    },
-
-    // {
-    //   icon: 'fa-table',
-    //   name: 'table',
-    // },
     {
       icon: 'icon file',
       name: 'file',
@@ -69,22 +59,6 @@
       icon: 'icon archive',
       name: 'archive',
       title: _t('widgets.archive', { defaultMessage: 'Archive (saved tabular data)' }),
-    },
-    // {
-    //   icon: 'icon plugin',
-    //   name: 'plugins',
-    //   title: 'Extensions & Plugins',
-    // },
-    {
-      name: 'cloud-public',
-      title: _t('widgets.dbgateCloud', { defaultMessage: 'DbGate Cloud' }),
-      icon: 'icon cloud-public',
-    },
-    {
-      icon: 'icon premium',
-      name: 'premium',
-      title: _t('widgets.premiumPromo', { defaultMessage: 'Premium promo' }),
-      isPremiumPromo: true,
     },
     // {
     //   icon: 'icon settings',
@@ -200,23 +174,6 @@
   >
     <FontIcon icon={$lockedDatabaseMode ? 'icon locked-database-mode' : 'icon unlocked-database-mode'} />
   </div> -->
-
-  {#if getCurrentConfig().allowPrivateCloud}
-    {#if $cloudSigninTokenHolder}
-      <div
-        class="wrapper"
-        on:click={handleCloudAccountMenu}
-        bind:this={domCloudAccount}
-        data-testid="WidgetIconPanel_cloudAccount"
-      >
-        <FontIcon icon="icon cloud-account-connected" />
-      </div>
-    {:else}
-      <div class="wrapper" on:click={handleOpenCloudLogin} data-testid="WidgetIconPanel_cloudAccount">
-        <FontIcon icon="icon cloud-account" />
-      </div>
-    {/if}
-  {/if}
 
   <div class="wrapper" on:click={handleSettingsMenu} bind:this={domSettings} data-testid="WidgetIconPanel_settings">
     <FontIcon icon="icon settings" />

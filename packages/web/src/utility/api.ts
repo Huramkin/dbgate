@@ -309,12 +309,7 @@ export function getAuthCategory(config) {
 }
 
 export function refreshPublicCloudFiles(force = false) {
-  if (sessionStorage.getItem('publicCloudFilesLoaded') && !force) {
-    return;
-  }
-
-  apiCall('cloud/refresh-public-files', { isRefresh: !!sessionStorage.getItem('publicCloudFilesLoaded') });
-  sessionStorage.setItem('publicCloudFilesLoaded', 'true');
+  // Cloud disabled
 }
 
 let apiSessionIdValue = null;

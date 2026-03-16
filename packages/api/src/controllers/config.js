@@ -311,8 +311,11 @@ module.exports = {
   changelog_meta: true,
   async changelog() {
     try {
-      const resp = await axios.default.get('https://raw.githubusercontent.com/dbgate/dbgate/master/CHANGELOG.md');
-      return resp.data;
+      const changelogPath = path.join(__dirname, '../../CHANGELOG.md');
+      if (await fs.exists(changelogPath)) {
+        return await fs.readFile(changelogPath, 'utf-8');
+      }
+      return '';
     } catch (err) {
       return '';
     }

@@ -35,12 +35,3 @@
 {#if $visibleSelectedWidget == 'admin' && hasPermission('widgets/admin')}
   <AdminMenuWidget />
 {/if}
-{#if $visibleSelectedWidget == 'premium'}
-  <AdminPremiumPromoWidget />
-{/if}
-{#if $visibleSelectedWidget == 'cloud-public' && hasPermission('widgets/cloud-public')}
-  <PublicCloudWidget />
-{/if}
-{#if $visibleSelectedWidget == 'cloud-private' && hasPermission('widgets/cloud-private')}
-  <PrivateCloudWidget />
-{/if}
