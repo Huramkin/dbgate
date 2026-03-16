@@ -127,67 +127,81 @@ Basic set of plugins is part of DbGate git repository and is installed with app.
 
 ## How to run development environment
 
-Simple variant - runs WEB application:
-```sh
-yarn
-yarn start
-```
+> **Prerequisites**: Node.js 22+, pnpm 9+  
+> Install pnpm: `npm install -g pnpm@9`
 
-If you want more control, run WEB application:
-```sh
-yarn # install NPM packages
-```
-
-And than run following 3 commands concurrently in 3 terminals:
-```
-yarn start:api # run API on port 3000
-yarn start:web # run web on port 5001
-yarn lib # watch typescript libraries and plugins modifications
-```
-This runs API on port 3000 and web application on port 5001  
-Open http://localhost:5001 in your browser
-
-If you want to run electron app:
-```sh
-yarn # install NPM packages
-cd app
-yarn # install NPM packages for electron
-```
-
-And than run following 3 commands concurrently in 3 terminals:
-```
-yarn start:web # run web on port 5001 (only static JS and HTML files)
-yarn lib # watch typescript libraries and plugins modifications
-yarn start:app # run electron app
-```
-
-## How to run built electron app locally
-This mode is very similar to production run of electron app. Electron doesn't use localhost:5001.
+### Quick start (Web application)
 
 ```sh
-cd app
-yarn
+pnpm install    # install all dependencies and build libraries/plugins
+pnpm start      # run API (port 3000) + Web frontend (port 5001) concurrently
 ```
 
+Open http://localhost:5001 in your browser.
+
+### Run with more control (3 terminals)
+
 ```sh
-yarn
-yarn build:app:local
-yarn start:app:local
+pnpm install           # install dependencies
+```
+
+Then run in 3 separate terminals:
+```sh
+pnpm start:api         # Terminal 1: API server on port 3000
+pnpm start:web         # Terminal 2: Web frontend on port 5001
+pnpm lib               # Terminal 3: Watch TypeScript libraries and plugins
+```
+
+### Run Electron desktop app
+
+```sh
+pnpm install           # install dependencies
+cd app && pnpm install # install Electron dependencies
+```
+
+Then run in 3 separate terminals:
+```sh
+pnpm start:web         # Terminal 1: Web frontend (static files)
+pnpm lib               # Terminal 2: Watch TypeScript libraries
+pnpm start:app         # Terminal 3: Electron app
+```
+
+### Build for production
+
+```sh
+pnpm build:lib         # build TypeScript libraries (sqltree, tools, filterparser, datalib, rest)
+pnpm build:web         # build web frontend
+pnpm build:api         # build API backend
+pnpm ts                # TypeScript type-check
+```
+
+### Build Electron app locally
+
+```sh
+cd app && pnpm install
+pnpm build:app:local   # build Electron app
+pnpm start:app:local   # run built Electron app
+```
+
+### Docker
+
+```sh
+pnpm prepare:docker    # build and prepare Docker image files
+cd docker && docker build -t dbgate .
+docker run -p 3000:3000 dbgate
 ```
 
 ## How to create plugin
 Creating plugin is described in [documentation](https://github.com/dbgate/dbgate/wiki/Plugin-development)
 
-But it is very simple:
-
 ```sh
-npm install -g yo # install yeoman
-npm install -g generator-dbgate # install dbgate generator
-cd dbgate-plugin-my-new-plugin # this directory is created by wizard, edit, what you need to change
-yarn plugin # this compiles plugin and copies it into existing DbGate installation
+npm install -g yo                # install yeoman
+npm install -g generator-dbgate  # install dbgate generator
+cd dbgate-plugin-my-new-plugin   # created by wizard
+pnpm plugin                      # compile and install plugin
 ```
 
-After restarting DbGate, you could use your new plugin from DbGate.
+After restarting DbGate, your new plugin will be available.
 
 ## Logging
 DbGate uses [pinomin logger](https://github.com/dbgate/pinomin). So by default, it produces JSON log messages into console and log files. If you want to see formatted logs, please use [pino-pretty](https://github.com/pinojs/pino-pretty) log formatter.
