@@ -74,6 +74,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 22.x
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - _include: checkout-and-merge-pro
         _if: _premium
@@ -83,22 +87,22 @@ jobs:
           <<cd_merged>>
           node adjustPackageJson <<adjust>>
 
-      - name: yarn install
+      - name: pnpm install
         run: |
           <<cd_merged>>
-          # yarn --version
-          # yarn config set network-timeout 300000
-          yarn install
+          # pnpm --version
+          # pnpm config set network-timeout 300000
+          pnpm install
 
       - name: setCurrentVersion
         run: |
           <<cd_merged>>
-          yarn setCurrentVersion
+          pnpm setCurrentVersion
           
       - name: Prepare docker image
         run: |
           <<cd_merged>>
-          yarn run prepare:docker
+          pnpm run prepare:docker
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2

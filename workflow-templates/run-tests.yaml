@@ -21,37 +21,41 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 22.x
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
 
-      - name: yarn install
+      - name: pnpm install
         run: |
-          yarn install
+          pnpm install
 
       - name: Integration tests
         run: |
           cd integration-tests
-          yarn test:ci
+          pnpm test:ci
 
       - name: Filter parser tests
         if: always()
         run: |
           cd packages/filterparser
-          yarn test:ci
+          pnpm test:ci
 
       - name: Datalib (perspective) tests
         if: always()
         run: |
           cd packages/datalib
-          yarn test:ci
+          pnpm test:ci
 
       - name: Tools tests
         if: always()
         run: |
           cd packages/tools
-          yarn test:ci
+          pnpm test:ci
 
       # - uses: tanmen/jest-reporter@v1
       #   if: always()

@@ -4,15 +4,15 @@
       "splitTerminals": [
         {
           "name": "lib",
-          "commands": ["yarn lib"]
+          "commands": ["pnpm lib"]
         },
         {
           "name": "web",
-          "commands": ["yarn start:web"]
+          "commands": ["pnpm start:web"]
         },
         {
           "name": "api",
-          "commands": ["yarn start:api"]
+          "commands": ["pnpm start:api"]
         }
       ]
     }

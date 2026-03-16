@@ -1,12 +1,16 @@
 {
   "compilerOptions": {
-    "target": "ES2018",
+    "target": "ES2019",
     "module": "commonjs",
     "declaration": true,
     "skipLibCheck": true,
     "outDir": "lib",
     "preserveWatchOutput": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "types": [
+      "node",
+      "jest"
+    ]
   },
   "include": [
     "src/**/*"

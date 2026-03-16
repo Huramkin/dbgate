@@ -48,8 +48,8 @@
     "test:charts": "start-server-and-test start:charts http://localhost:3000 cy:run:charts",
     "test:redis": "start-server-and-test start:redis http://localhost:3000 cy:run:redis",
     "test:ai-chat": "start-server-and-test start:ai-chat http://localhost:3000 cy:run:ai-chat",
-    "test": "yarn test:add-connection && yarn test:portal && yarn test:oauth && yarn test:browse-data && yarn test:rest && yarn test:team && yarn test:multi-sql && yarn test:cloud && yarn test:charts && yarn test:redis && yarn test:ai-chat",
-    "test:ci": "yarn test"
+    "test": "pnpm test:add-connection && pnpm test:portal && pnpm test:oauth && pnpm test:browse-data && pnpm test:rest && pnpm test:team && pnpm test:multi-sql && pnpm test:cloud && pnpm test:charts && pnpm test:redis && pnpm test:ai-chat",
+    "test:ci": "pnpm test"
   },
   "dependencies": {}
 }

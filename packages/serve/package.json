@@ -18,19 +18,19 @@
     "web"
   ],
   "dependencies": {
-    "dbgate-api": "^7.0.0-alpha.1",
-    "dbgate-plugin-clickhouse": "^7.0.0-alpha.1",
-    "dbgate-plugin-csv": "^7.0.0-alpha.1",
-    "dbgate-plugin-excel": "^7.0.0-alpha.1",
-    "dbgate-plugin-mongo": "^7.0.0-alpha.1",
-    "dbgate-plugin-mssql": "^7.0.0-alpha.1",
-    "dbgate-plugin-mysql": "^7.0.0-alpha.1",
-    "dbgate-plugin-oracle": "^7.0.0-alpha.1",
-    "dbgate-plugin-postgres": "^7.0.0-alpha.1",
-    "dbgate-plugin-redis": "^7.0.0-alpha.1",
-    "dbgate-plugin-sqlite": "^7.0.0-alpha.1",
-    "dbgate-plugin-xml": "^7.0.0-alpha.1",
-    "dbgate-web": "^7.0.0-alpha.1",
+    "dbgate-api": "workspace:*",
+    "dbgate-plugin-clickhouse": "workspace:*",
+    "dbgate-plugin-csv": "workspace:*",
+    "dbgate-plugin-excel": "workspace:*",
+    "dbgate-plugin-mongo": "workspace:*",
+    "dbgate-plugin-mssql": "workspace:*",
+    "dbgate-plugin-mysql": "workspace:*",
+    "dbgate-plugin-oracle": "workspace:*",
+    "dbgate-plugin-postgres": "workspace:*",
+    "dbgate-plugin-redis": "workspace:*",
+    "dbgate-plugin-sqlite": "workspace:*",
+    "dbgate-plugin-xml": "workspace:*",
+    "dbgate-web": "workspace:*",
     "dotenv": "^16.0.0"
   }
 }

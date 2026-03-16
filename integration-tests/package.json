@@ -14,7 +14,7 @@
     "test:local": "cross-env DEVMODE=1 LOCALTEST=1 jest  --testTimeout=5000",
     "test:local:path": "cross-env DEVMODE=1 LOCALTEST=1 jest --runTestsByPath __tests__/alter-database.spec.js",
     "test:ci": "cross-env DEVMODE=1 CITEST=1 jest --runInBand --json --outputFile=result.json --testLocationInResults --detectOpenHandles --forceExit --testTimeout=10000",
-    "run:local": "docker-compose down && docker-compose up -d && yarn wait:local && yarn test:local"
+    "run:local": "docker-compose down && docker-compose up -d && pnpm wait:local && pnpm test:local"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",

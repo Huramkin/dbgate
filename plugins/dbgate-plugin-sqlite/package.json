@@ -23,11 +23,11 @@
     "build:frontend": "webpack --config webpack-frontend.config",
     "build:frontend:watch": "webpack --watch --config webpack-frontend.config",
     "build:backend": "webpack --config webpack-backend.config.js",
-    "build": "yarn build:frontend && yarn build:backend",
-    "plugin": "yarn build && yarn pack && dbgate-plugin dbgate-plugin-sqlite",
-    "copydist": "yarn build && yarn pack && dbgate-copydist ../dist/dbgate-plugin-sqlite",
+    "build": "pnpm build:frontend && pnpm build:backend",
+    "plugin": "pnpm build && pnpm pack && dbgate-plugin dbgate-plugin-sqlite",
+    "copydist": "pnpm build && pnpm pack && dbgate-copydist ../dist/dbgate-plugin-sqlite",
     "plugout": "dbgate-plugout dbgate-plugin-sqlite",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "pnpm build"
   },
   "devDependencies": {
     "dbgate-plugin-tools": "^1.0.4",
@@ -35,7 +35,7 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
-    "dbgate-tools": "^7.0.0-alpha.1",
+    "dbgate-tools": "workspace:*",
     "lodash": "^4.17.21",
     "dbgate-query-splitter": "^4.12.0"
   },

@@ -29,14 +29,18 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 22.x
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
       - name: Update npm
         run: npm install -g npm@latest
-      - name: yarn install
+      - name: pnpm install
         run: |
-          yarn install
+          pnpm install
       - name: setCurrentVersion
         run: |
-          yarn setCurrentVersion
+          pnpm setCurrentVersion
       - name: Compute npm dist-tag
         run: |
           if [[ "${GITHUB_REF_NAME}" =~ -alpha\. ]]; then

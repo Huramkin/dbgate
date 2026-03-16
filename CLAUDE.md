@@ -4,57 +4,57 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-DbGate is a cross-platform (no)SQL database manager supporting MySQL, PostgreSQL, SQL Server, Oracle, MongoDB, Redis, SQLite, and more. It runs as a web app (Docker/NPM), an Electron desktop app, or in a browser. The monorepo uses Yarn workspaces.
+DbGate is a cross-platform (no)SQL database manager supporting MySQL, PostgreSQL, SQL Server, Oracle, MongoDB, Redis, SQLite, and more. It runs as a web app (Docker/NPM), an Electron desktop app, or in a browser. The monorepo uses pnpm workspaces.
 
 ## Development Commands
 
 ```sh
-yarn          # install all packages (also builds TS libraries and plugins)
-yarn start    # run API (port 3000) + web (port 5001) concurrently
+pnpm install  # install all packages (also builds TS libraries and plugins)
+pnpm start    # run API (port 3000) + web (port 5001) concurrently
 ```
 
 For more control, run these 3 commands in separate terminals:
 ```sh
-yarn start:api    # Express API on port 3000
-yarn start:web    # Svelte frontend on port 5001
-yarn lib          # watch-compile TS libraries and plugins
+pnpm start:api    # Express API on port 3000
+pnpm start:web    # Svelte frontend on port 5001
+pnpm lib          # watch-compile TS libraries and plugins
 ```
 
 For Electron development:
 ```sh
-yarn start:web     # web on port 5001
-yarn lib           # watch TS libs/plugins
-yarn start:app     # Electron app
+pnpm start:web     # web on port 5001
+pnpm lib           # watch TS libs/plugins
+pnpm start:app     # Electron app
 ```
 
 ### Building
 
 ```sh
-yarn build:lib          # build all TS libraries (sqltree, tools, filterparser, datalib, rest)
-yarn build:api          # build API
-yarn build:web          # build web frontend
-yarn ts                 # TypeScript type-check API and web
-yarn prettier           # format all source files
+pnpm build:lib          # build all TS libraries (sqltree, tools, filterparser, datalib, rest)
+pnpm build:api          # build API
+pnpm build:web          # build web frontend
+pnpm ts                 # TypeScript type-check API and web
+pnpm prettier           # format all source files
 ```
 
 ### Testing
 
 Unit tests (in packages like `dbgate-tools`):
 ```sh
-yarn workspace dbgate-tools test
+pnpm --filter dbgate-tools test
 ```
 
 Integration tests (requires Docker for database containers):
 ```sh
 cd integration-tests
-yarn test:local                                              # run all tests
-yarn test:local:path __tests__/alter-database.spec.js       # run a single test file
+pnpm test:local                                              # run all tests
+pnpm test:local:path __tests__/alter-database.spec.js       # run a single test file
 ```
 
 E2E tests (Cypress):
 ```sh
-yarn cy:open                    # open Cypress UI
-cd e2e-tests && yarn cy:run:browse-data   # run a specific spec headlessly
+pnpm cy:open                    # open Cypress UI
+cd e2e-tests && pnpm cy:run:browse-data   # run a specific spec headlessly
 ```
 
 ## Architecture
@@ -113,7 +113,7 @@ Plugins are copied to `plugins/dist/` via `plugins:copydist` before building the
 ### Translation System
 
 ```sh
-yarn translations:extract        # extract new strings
-yarn translations:add-missing    # add missing translations
-yarn translations:check          # check for issues
+pnpm translations:extract        # extract new strings
+pnpm translations:add-missing    # add missing translations
+pnpm translations:check          # check for issues
 ```

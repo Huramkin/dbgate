@@ -38,6 +38,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 22.x
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       # Ensure npm 11.5.1 or later is installed
       - name: Update npm
@@ -49,13 +53,13 @@ jobs:
       #   run: |
       #     npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
 
-      - name: yarn install
+      - name: pnpm install
         run: |
-          yarn install
+          pnpm install
           
       - name: setCurrentVersion
         run: |
-          yarn setCurrentVersion
+          pnpm setCurrentVersion
 
       - name: Compute npm dist-tag
         run: |

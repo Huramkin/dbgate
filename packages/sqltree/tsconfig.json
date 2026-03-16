@@ -6,7 +6,8 @@
       "skipLibCheck": true,
       "outDir": "lib",
       "preserveWatchOutput": true,
-      "esModuleInterop": true
+      "esModuleInterop": true,
+      "types": ["node"]
     },
     "include": [
       "src/**/*"

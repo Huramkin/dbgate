@@ -4,8 +4,8 @@
         "dbgate"
     ],
     "chat.tools.terminal.autoApprove": {
-        "yarn workspace": true,
-        "yarn --cwd packages/rest": true,
-        "yarn --cwd packages/web": true
+        "pnpm --filter": true,
+        "pnpm --cwd packages/rest": true,
+        "pnpm --cwd packages/web": true
     }
 }

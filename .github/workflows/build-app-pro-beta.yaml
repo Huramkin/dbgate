@@ -56,7 +56,7 @@ jobs:
           mkdir dbgate-merged
           cd dbgate-pro
           cd sync
-          yarn
+          pnpm install
           node sync.js --nowatch
           cd ..
       - name: adjustPackageJson
@@ -71,44 +71,42 @@ jobs:
           cd dbgate-merged
 
           node setUpdaterChannel premium-beta
-      - name: yarn set timeout
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - name: pnpm install
         run: |
           cd ..
           cd dbgate-merged
 
-          yarn config set network-timeout 100000
-      - name: yarn install
-        run: |
-          cd ..
-          cd dbgate-merged
-
-          yarn install
+          pnpm install
       - name: setCurrentVersion
         run: |
           cd ..
           cd dbgate-merged
 
-          yarn setCurrentVersion
+          pnpm setCurrentVersion
       - name: fillPackagedPlugins
         run: |
           cd ..
           cd dbgate-merged
 
-          yarn fillPackagedPlugins
+          pnpm fillPackagedPlugins
       - name: Publish Windows
         if: matrix.os == 'windows-2022'
         run: |
           cd ..
           cd dbgate-merged
 
-          yarn run build:app
+          pnpm run build:app
       - name: Publish MacOS
         if: matrix.os == 'macos-14'
         run: |
           cd ..
           cd dbgate-merged
 
-          yarn run build:app
+          pnpm run build:app
         env:
           CSC_LINK: ${{ secrets.APPLECERT_CERTIFICATE }}
           CSC_KEY_PASSWORD: ${{ secrets.APPLECERT_PASSWORD }}
@@ -122,7 +120,7 @@ jobs:
           cd ..
           cd dbgate-merged
 
-          yarn run build:app
+          pnpm run build:app
         env:
           SNAPCRAFT_STORE_CREDENTIALS: ${{secrets.SNAPCRAFT_LOGIN}}
       - name: Azure login (OIDC)
@@ -149,7 +147,7 @@ jobs:
           cd ..
           cd dbgate-merged
 
-          yarn run fixYmlHashes
+          pnpm run fixYmlHashes
       - name: Copy artifacts
         run: |
           mkdir artifacts          

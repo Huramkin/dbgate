@@ -38,6 +38,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 22.x
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
 
       - _include: checkout-and-merge-pro
 
@@ -65,17 +69,17 @@ jobs:
           cd dbgate-merged
           rm -rf packages/dbmodel
 
-      - name: yarn install
+      - name: pnpm install
         run: |
           cd ..
           cd dbgate-merged
-          yarn install
+          pnpm install
           
       - name: setCurrentVersion
         run: |
           cd ..
           cd dbgate-merged
-          yarn setCurrentVersion
+          pnpm setCurrentVersion
 
       - name: Compute npm dist-tag
         run: |

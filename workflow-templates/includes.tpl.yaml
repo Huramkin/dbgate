@@ -16,6 +16,6 @@ checkout-and-merge-pro:
       mkdir dbgate-merged
       cd dbgate-pro
       cd sync
-      yarn
+      pnpm install
       node sync.js --nowatch
       cd ..
