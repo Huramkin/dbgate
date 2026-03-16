@@ -35,7 +35,7 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
-    "dbgate-tools": "^7.0.0-alpha.1",
+    "dbgate-tools": "workspace:*",
     "lodash": "^4.17.21",
     "dbgate-query-splitter": "^4.12.0"
   },
