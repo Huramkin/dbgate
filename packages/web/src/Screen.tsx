@@ -5,6 +5,9 @@ import StatusBar from '@/widgets/StatusBar';
 import Snackbar from '@/widgets/Snackbar';
 import TitleBar from '@/widgets/TitleBar';
 import MultiTabsContainer from '@/tabpanel/MultiTabsContainer';
+import CommandListener from '@/commands/CommandListener';
+import CommandPalette from '@/commands/CommandPalette';
+import ModalLayer from '@/modals/ModalLayer';
 import { useAppStore } from '@/stores/appStore';
 import getElectron from '@/utility/getElectron';
 import FontIcon from '@/icons/FontIcon';
@@ -176,6 +179,15 @@ export default function Screen() {
             {/* TODO: RightWidgetContainer */}
           </div>
         )}
+
+        {/* Command Palette */}
+        {visibleCommandPalette && <CommandPalette />}
+
+        {/* Modal Layer */}
+        <ModalLayer />
+
+        {/* Command Listener (keyboard shortcuts) */}
+        <CommandListener />
 
         {/* Snackbar container */}
         <div

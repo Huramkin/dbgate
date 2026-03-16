@@ -28,13 +28,8 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: 'public/build',
+    outDir: 'dist',
     emptyOutDir: true,
-    rollupOptions: {
-      input: {
-        main: path.resolve(__dirname, 'index.html'),
-      },
-    },
   },
   css: {
     postcss: './postcss.config.js',
