@@ -95,8 +95,8 @@ function stopProcess(pidFile) {
 
 function ensureDependencies(dir, checkFile) {
   if (fs.existsSync(checkFile)) return;
-  const command = isWindows ? 'cmd.exe' : 'yarn';
-  const args = isWindows ? ['/c', 'yarn install --silent'] : ['install', '--silent'];
+  const command = isWindows ? 'cmd.exe' : 'pnpm';
+  const args = isWindows ? ['/c', 'pnpm install --silent'] : ['install', '--silent'];
   const result = spawnSync(command, args, {
     cwd: dir,
     stdio: 'inherit',
@@ -108,8 +108,8 @@ function ensureDependencies(dir, checkFile) {
 }
 
 function startBackgroundProcess(dir, pidFile, port) {
-  const command = isWindows ? 'cmd.exe' : 'yarn';
-  const args = isWindows ? ['/c', 'yarn start'] : ['start'];
+  const command = isWindows ? 'cmd.exe' : 'pnpm';
+  const args = isWindows ? ['/c', 'pnpm start'] : ['start'];
   const child = spawn(command, args, {
     cwd: dir,
     env: { ...process.env, PORT: String(port) },

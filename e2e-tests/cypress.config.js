@@ -26,37 +26,37 @@ module.exports = defineConfig({
           }
           switch (details.fileName) {
             case 'add-connection':
-              serverProcess = exec('yarn start:add-connection');
+              serverProcess = exec('pnpm start:add-connection');
               break;
             case 'portal':
-              serverProcess = exec('yarn start:portal');
+              serverProcess = exec('pnpm start:portal');
               break;
             case 'oauth':
-              serverProcess = exec('yarn start:oauth');
+              serverProcess = exec('pnpm start:oauth');
               break;
             case 'browse-data':
-              serverProcess = exec('yarn start:browse-data');
+              serverProcess = exec('pnpm start:browse-data');
               break;
             case 'rest':
-              serverProcess = exec('yarn start:rest');
+              serverProcess = exec('pnpm start:rest');
               break;
             case 'team':
-              serverProcess = exec('yarn start:team');
+              serverProcess = exec('pnpm start:team');
               break;
             case 'multi-sql':
-              serverProcess = exec('yarn start:multi-sql');
+              serverProcess = exec('pnpm start:multi-sql');
               break;
             case 'cloud':
-              serverProcess = exec('yarn start:cloud');
+              serverProcess = exec('pnpm start:cloud');
               break;
             case 'charts':
-              serverProcess = exec('yarn start:charts');
+              serverProcess = exec('pnpm start:charts');
               break;
             case 'redis':
-              serverProcess = exec('yarn start:redis');
+              serverProcess = exec('pnpm start:redis');
               break;
             case 'ai-chat':
-              serverProcess = exec('yarn start:ai-chat');
+              serverProcess = exec('pnpm start:ai-chat');
               break;
           }
 
