@@ -2,6 +2,8 @@ import type { ThemeDefinition } from 'dbgate-types';
 import { derived, writable } from 'svelte/store';
 import { themeDarkColors } from './themeDarkColors';
 import { themeLightColors } from './themeLightColors';
+import { themeNavicatLightColors } from './themeNavicatLightColors';
+import { themeNavicatDarkColors } from './themeNavicatDarkColors';
 import getElectron from '../utility/getElectron';
 import { writableSettingsValue, writableWithStorage } from '../stores';
 import { showModal } from '../modals/modalTools';
@@ -20,6 +22,18 @@ export const themeDark: ThemeDefinition = {
   themeType: 'dark',
   isBuiltInTheme: true,
   themeVariables: null,
+};
+export const themeNavicatLight: ThemeDefinition = {
+  themeName: 'Navicat Light',
+  themeType: 'light',
+  isBuiltInTheme: true,
+  themeVariables: themeNavicatLightColors,
+};
+export const themeNavicatDark: ThemeDefinition = {
+  themeName: 'Navicat Dark',
+  themeType: 'dark',
+  isBuiltInTheme: true,
+  themeVariables: themeNavicatDarkColors,
 };
 
 const darkModeMediaQuery = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
@@ -99,7 +113,7 @@ export function getCurrentCompleteThemeVariables() {
 }
 
 export function getBuiltInThemes() {
-  return [themeLight, themeDark];
+  return [themeLight, themeDark, themeNavicatLight, themeNavicatDark];
 }
 
 export const currentThemeDefinition = getElectron()
