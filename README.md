@@ -139,6 +139,12 @@ pnpm start      # run API (port 3000) + Web frontend (port 5001) concurrently
 
 Open http://localhost:5001 in your browser.
 
+> **Troubleshooting**: If you see `Bundling CSS is no longer supported` error, run:
+> ```sh
+> rm -rf node_modules && pnpm install
+> ```
+> This ensures rolldown 1.0.0-rc.5 (required version) is installed instead of a newer incompatible version.
+
 ### Run with more control (3 terminals)
 
 ```sh
