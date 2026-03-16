@@ -247,7 +247,8 @@ function useAllControllers(app, electron) {
   useController(app, electron, '/query-history', queryHistory);
   useController(app, electron, '/apps', apps);
   useController(app, electron, '/auth', auth);
-  useController(app, electron, '/cloud', cloud);
+  // Cloud disabled
+  // useController(app, electron, '/cloud', cloud);
   useController(app, electron, '/team-files', teamFiles);
   useController(app, electron, '/rest-connections', restConnections);
 }

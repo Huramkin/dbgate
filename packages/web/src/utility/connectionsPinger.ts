@@ -68,22 +68,29 @@ let currentDatabaseHandle = null;
 let allDatabasesHandle = null;
 
 export function subscribeConnectionPingers() {
-  openedConnectionsWithTemporary.subscribe(value => {
+  const unsubConnections = openedConnectionsWithTemporary.subscribe(value => {
     doServerPing(value);
     if (openedConnectionsHandle) window.clearInterval(openedConnectionsHandle);
     openedConnectionsHandle = window.setInterval(() => doServerPing(value), 20 * 1000);
   });
 
-  currentDatabase.subscribe(value => {
+  const unsubDatabase = currentDatabase.subscribe(value => {
     doDatabasePing(value);
     if (currentDatabaseHandle) window.clearInterval(currentDatabaseHandle);
     currentDatabaseHandle = window.setInterval(() => doDatabasePing(value), 20 * 1000);
   });
 
-  // Ping all databases that have open (non-closed) tabs, not just the current one
   pingAllOpenedDatabases();
   if (allDatabasesHandle) window.clearInterval(allDatabasesHandle);
   allDatabasesHandle = window.setInterval(() => pingAllOpenedDatabases(), 20 * 1000);
+
+  return () => {
+    unsubConnections();
+    unsubDatabase();
+    if (openedConnectionsHandle) window.clearInterval(openedConnectionsHandle);
+    if (currentDatabaseHandle) window.clearInterval(currentDatabaseHandle);
+    if (allDatabasesHandle) window.clearInterval(allDatabasesHandle);
+  };
 }
 
 export function callServerPing() {

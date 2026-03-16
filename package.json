@@ -34,7 +34,7 @@
     "build:filterparser": "pnpm --filter dbgate-filterparser build",
     "build:tools": "pnpm --filter dbgate-tools build",
     "build:rest": "pnpm --filter dbgate-rest build",
-    "build:lib": "pnpm build:sqltree && pnpm build:tools && pnpm build:filterparser && pnpm build:datalib && pnpm build:rest",
+    "build:lib": "pnpm build:sqltree && pnpm build:tools && concurrently \"pnpm build:filterparser\" \"pnpm build:rest\" && pnpm build:datalib",
     "build:app": "pnpm plugins:copydist && cd app && pnpm install && pnpm build",
     "build:api": "pnpm --filter dbgate-api build",
     "build:api:doc": "pnpm --filter dbgate-api build:doc",
