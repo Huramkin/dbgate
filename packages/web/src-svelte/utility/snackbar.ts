@@ -1,4 +1,4 @@
-import { useAppStore } from '@/stores/appStore';
+import { openedSnackbars } from '../stores';
 
 export interface SnackbarButton {
   label: string;
@@ -20,7 +20,13 @@ let lastSnackbarId = 0;
 export function showSnackbar(snackbar: SnackbarInfo): string {
   lastSnackbarId += 1;
   const id = lastSnackbarId.toString();
-  useAppStore.getState().addSnackbar({ ...snackbar, id });
+  openedSnackbars.update(x => [
+    ...x,
+    {
+      ...snackbar,
+      id,
+    },
+  ]);
   return id;
 }
 
@@ -52,12 +58,25 @@ export function showSnackbarError(message: string) {
 }
 
 export function closeSnackbar(snackId: string) {
-  useAppStore.getState().removeSnackbar(snackId);
+  openedSnackbars.update(x => x.filter(x => x.id != snackId));
 }
 
 export function updateSnackbarProgressMessage(snackId: string, progressMessage: string) {
-  const store = useAppStore.getState();
-  store.setOpenedSnackbars(
-    store.openedSnackbars.map((x) => (x.id === snackId ? { ...x, progressMessage } : x))
-  );
+  openedSnackbars.update(x => x.map(x => (x.id === snackId ? { ...x, progressMessage } : x)));
 }
+
+//   showSnackbar({
+//     icon: 'img ok',
+//     message: 'Test snackbar',
+//     allowClose: true,
+//   });
+// showSnackbar({
+//   icon: 'img ok',
+//   message: 'Auto close',
+//   autoClose: true,
+// });
+//   showSnackbar({
+//     icon: 'img warn',
+//     message: 'Buttons',
+//     buttons: [{ label: 'OK', onClick: () => console.log('OK') }],
+//   });

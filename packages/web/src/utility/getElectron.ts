@@ -1,34 +1,28 @@
 class ElectronApi {
   private ipcRenderer = getIpcRenderer();
 
-  constructor() {}
-
-  send(msg, args = null) {
+  send(msg: string, args: any = null) {
     this.ipcRenderer.send(msg, args);
   }
 
-  async showOpenDialog(options) {
-    const res = await this.ipcRenderer.invoke('showOpenDialog', options);
-    return res;
+  async showOpenDialog(options: any) {
+    return await this.ipcRenderer.invoke('showOpenDialog', options);
   }
 
-  async showSaveDialog(options) {
-    const res = await this.ipcRenderer.invoke('showSaveDialog', options);
-    return res;
+  async showSaveDialog(options: any) {
+    return await this.ipcRenderer.invoke('showSaveDialog', options);
   }
 
-  async showItemInFolder(path) {
-    const res = await this.ipcRenderer.invoke('showItemInFolder', path);
-    return res;
+  async showItemInFolder(path: string) {
+    return await this.ipcRenderer.invoke('showItemInFolder', path);
   }
 
-  async openExternal(url) {
+  async openExternal(url: string) {
     await this.ipcRenderer.invoke('openExternal', url);
   }
 
-  async invoke(route, args) {
-    const res = await this.ipcRenderer.invoke(route, args);
-    return res;
+  async invoke(route: string, args: any) {
+    return await this.ipcRenderer.invoke(route, args);
   }
 
   addEventListener(channel: string, listener: Function) {
@@ -41,8 +35,8 @@ class ElectronApi {
 }
 
 function getIpcRenderer() {
-  if (window['require']) {
-    const electron = window['require']('electron');
+  if ((window as any)['require']) {
+    const electron = (window as any)['require']('electron');
     return electron?.ipcRenderer;
   }
   return null;
@@ -54,18 +48,6 @@ export function isElectronAvailable() {
 
 const apiInstance = isElectronAvailable() ? new ElectronApi() : null;
 
-export default function getElectron(): ElectronApi {
+export default function getElectron(): ElectronApi | null {
   return apiInstance;
-  // try {
-  //   // @ts-ignore
-  //   return ipcRenderer;
-  // } catch (e) {
-  //   return null;
-  // }
-  // if (window['require']) {
-  //   const electron = window['require']('electron');
-  //   console.log('electron?.ipcRenderer', electron?.ipcRenderer);
-  //   return electron?.ipcRenderer;
-  // }
-  // return null;
 }

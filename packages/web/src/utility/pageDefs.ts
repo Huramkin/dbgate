@@ -1,9 +1,9 @@
 export function isAdminPage() {
-  return window['dbgate_page'] == 'admin';
+  return (window as any)['dbgate_page'] == 'admin';
 }
 
-export function isOneOfPage(...pages) {
-  return pages.includes(window['dbgate_page']);
+export function isOneOfPage(...pages: string[]) {
+  return pages.includes((window as any)['dbgate_page']);
 }
 
 export function getOpenedTabsStorageName() {
