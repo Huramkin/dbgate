@@ -80,8 +80,8 @@ function stopPreviousTestApi() {
 }
 
 function startTestApi() {
-  const command = isWindows ? 'cmd.exe' : 'yarn';
-  const args = isWindows ? ['/c', 'yarn start'] : ['start'];
+  const command = isWindows ? 'cmd.exe' : 'pnpm';
+  const args = isWindows ? ['/c', 'pnpm start'] : ['start'];
 
   const child = spawn(command, args, {
     cwd: testApiDir,
@@ -107,8 +107,8 @@ function ensureTestApiDependencies() {
     return;
   }
 
-  const installCommand = isWindows ? 'cmd.exe' : 'yarn';
-  const installArgs = isWindows ? ['/c', 'yarn install --silent'] : ['install', '--silent'];
+  const installCommand = isWindows ? 'cmd.exe' : 'pnpm';
+  const installArgs = isWindows ? ['/c', 'pnpm install --silent'] : ['install', '--silent'];
   const result = spawnSync(installCommand, installArgs, {
     cwd: testApiDir,
     stdio: 'inherit',
