@@ -26,9 +26,9 @@
     "lib"
   ],
   "devDependencies": {
-    "@types/node": "^13.7.0",
+    "@types/node": "^25.5.0",
     "dbgate-types": "workspace:*",
-    "typescript": "^4.4.3"
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "lodash": "^4.17.21"

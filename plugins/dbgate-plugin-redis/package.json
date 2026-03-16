@@ -34,11 +34,11 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
+    "async": "^3.2.3",
     "dbgate-query-splitter": "^4.12.0",
     "dbgate-tools": "workspace:*",
-    "lodash": "^4.17.21",
-    "async": "^3.2.3",
     "ioredis": "^5.4.1",
-    "node-redis-dump2": "^0.5.0"
+    "lodash": "^4.17.21",
+    "node-redis-dump2": "^0.6.0"
   }
 }

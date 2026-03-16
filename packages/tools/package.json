@@ -25,11 +25,11 @@
     "lib"
   ],
   "devDependencies": {
-    "@types/node": "^13.7.0",
+    "@types/node": "^25.5.0",
     "dbgate-types": "workspace:*",
     "jest": "^28.1.3",
     "ts-jest": "^28.0.7",
-    "typescript": "^4.4.3"
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "blueimp-md5": "^2.19.0",

@@ -29,18 +29,18 @@
     "bin"
   ],
   "dependencies": {
-    "commander": "^10.0.0",
+    "commander": "^14.0.3",
     "dbgate-api": "workspace:*",
     "dbgate-plugin-csv": "workspace:*",
     "dbgate-plugin-excel": "workspace:*",
     "dbgate-plugin-mongo": "workspace:*",
     "dbgate-plugin-mssql": "workspace:*",
     "dbgate-plugin-mysql": "workspace:*",
+    "dbgate-plugin-oracle": "workspace:*",
     "dbgate-plugin-postgres": "workspace:*",
     "dbgate-plugin-xml": "workspace:*",
-    "dbgate-plugin-oracle": "workspace:*",
     "dbgate-web": "workspace:*",
-    "dotenv": "^16.0.0",
+    "dotenv": "^17.3.1",
     "pinomin": "^1.0.5"
   }
 }

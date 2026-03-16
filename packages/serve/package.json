@@ -31,6 +31,6 @@
     "dbgate-plugin-sqlite": "workspace:*",
     "dbgate-plugin-xml": "workspace:*",
     "dbgate-web": "workspace:*",
-    "dotenv": "^16.0.0"
+    "dotenv": "^17.3.1"
   }
 }
