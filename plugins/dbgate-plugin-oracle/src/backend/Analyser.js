@@ -45,38 +45,29 @@ class Analyser extends DatabaseAnalyser {
   }
 
   async _runAnalysis() {
-    this.feedback({ analysingMessage: 'DBGM-00230 Loading tables' });
-    const tables = await this.analyserQuery('tableList', ['tables'], { $owner: this.dbhan.database });
-    this.feedback({ analysingMessage: 'DBGM-00231 Loading columns' });
-    const columns = await this.analyserQuery('columns', ['tables', 'views'], { $owner: this.dbhan.database });
+    this.feedback({ analysingMessage: 'DBGM-00230 Loading database structure' });
 
-    this.feedback({ analysingMessage: 'DBGM-00232 Loading primary keys' });
-    const pkColumns = await this.analyserQuery('primaryKeys', ['tables'], { $owner: this.dbhan.database });
+    const ownerOpt = { $owner: this.dbhan.database };
+    const [tables, columns, pkColumns, fkColumns, views, routines, parameters, indexes, triggers, uniqueNames] =
+      await Promise.all([
+        this.analyserQuery('tableList', ['tables'], ownerOpt),
+        this.analyserQuery('columns', ['tables', 'views'], ownerOpt),
+        this.analyserQuery('primaryKeys', ['tables'], ownerOpt),
+        this.analyserQuery('foreignKeys', ['tables'], ownerOpt),
+        this.analyserQuery('views', ['views'], ownerOpt),
+        this.analyserQuery('routines', ['procedures', 'functions'], ownerOpt),
+        this.analyserQuery('parameters', ['procedures', 'functions'], ownerOpt),
+        this.analyserQuery('indexes', ['tables'], ownerOpt),
+        this.analyserQuery('triggers', undefined, ownerOpt),
+        this.analyserQuery('uniqueNames', ['tables'], ownerOpt),
+      ]);
 
-    //let fkColumns = null;
-
-    this.feedback({ analysingMessage: 'DBGM-00233 Loading foreign keys' });
-    const fkColumns = await this.analyserQuery('foreignKeys', ['tables'], { $owner: this.dbhan.database });
-    this.feedback({ analysingMessage: 'DBGM-00234 Loading views' });
-    const views = await this.analyserQuery('views', ['views'], { $owner: this.dbhan.database });
-
-    this.feedback({ analysingMessage: 'DBGM-00235 Loading materialized views' });
     const matviews = this.driver.dialect.materializedViews
-      ? await this.analyserQuery('matviews', ['matviews'], { $owner: this.dbhan.database })
+      ? await this.analyserQuery('matviews', ['matviews'], ownerOpt)
       : null;
-    this.feedback({ analysingMessage: 'DBGM-00236 Loading routines' });
-    const routines = await this.analyserQuery('routines', ['procedures', 'functions'], {
-      $owner: this.dbhan.database,
-    });
-
-    const parameters = await this.analyserQuery('parameters', ['procedures', 'functions'], {
-      $owner: this.dbhan.database,
-    });
-    console.dir(parameters, { depth: 4 });
 
     const routineToParams = parameters.rows.reduce((acc, row) => {
       if (!acc[row.PURE_NAME]) acc[row.PURE_NAME] = [];
-
       acc[row.PURE_NAME].push({
         pureName: row.PURE_NAME,
         parameterName: row.PARAMETER_NAME,
@@ -87,18 +78,9 @@ class Analyser extends DatabaseAnalyser {
         parameterMode: row.PARAMETER_MODE,
         position: row.ORDINAL_POSITION ?? acc[row.PURE_NAME].length,
       });
-
       return acc;
     }, {});
 
-    this.feedback({ analysingMessage: 'DBGM-00237 Loading indexes' });
-    const indexes = await this.analyserQuery('indexes', ['tables'], { $owner: this.dbhan.database });
-    this.feedback({ analysingMessage: 'DBGM-00238 Loading unique names' });
-
-    const triggers = await this.analyserQuery('triggers', undefined, { $owner: this.dbhan.database });
-    this.feedback({ analysingMessage: 'DBGM-00239 Loading triggers' });
-
-    const uniqueNames = await this.analyserQuery('uniqueNames', ['tables'], { $owner: this.dbhan.database });
     this.feedback({ analysingMessage: 'DBGM-00240 Finalizing DB structure' });
 
     const fkColumnsMapped = fkColumns.rows.map(x => ({

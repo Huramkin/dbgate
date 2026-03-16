@@ -83,25 +83,25 @@ class Analyser extends DatabaseAnalyser {
   }
 
   async _runAnalysis() {
-    this.feedback({ analysingMessage: 'DBGM-00241 Loading tables' });
-    const tables = await this.analyserQuery('tableList', ['tables']);
+    this.feedback({ analysingMessage: 'DBGM-00241 Loading database structure' });
 
-    this.feedback({ analysingMessage: 'DBGM-00242 Loading columns' });
-    const columns = await this.analyserQuery('columns', ['tables', 'views']);
-
-    this.feedback({ analysingMessage: 'DBGM-00243 Loading primary keys' });
-    const pkColumns = await this.analyserQuery('primaryKeys', ['tables']);
+    const [tables, columns, pkColumns, foreignKeys, fk_keyColumnUsage, views, routines, routineParametersRows, indexes, indexcols, uniqueNames, triggers] =
+      await Promise.all([
+        this.analyserQuery('tableList', ['tables']),
+        this.analyserQuery('columns', ['tables', 'views']),
+        this.analyserQuery('primaryKeys', ['tables']),
+        this.analyserQuery('foreignKeys', ['tables']),
+        this.analyserQuery('fk_keyColumnUsage', ['tables']),
+        this.analyserQuery('views', ['views']),
+        this.analyserQuery('routines', ['procedures', 'functions']),
+        this.analyserQuery('proceduresParameters'),
+        this.driver.__analyserInternals.skipIndexes ? Promise.resolve({ rows: [] }) : this.analyserQuery('indexes', ['tables']),
+        this.driver.__analyserInternals.skipIndexes ? Promise.resolve({ rows: [] }) : this.analyserQuery('indexcols', ['tables']),
+        this.analyserQuery('uniqueNames', ['tables']),
+        this.analyserQuery('triggers'),
+      ]);
 
     let fkColumns = null;
-
-    this.feedback({ analysingMessage: 'DBGM-00244 Loading foreign key constraints' });
-    // const fk_tableConstraints = await this.analyserQuery('fk_tableConstraints', ['tables']);
-
-    this.feedback({ analysingMessage: 'DBGM-00245 Loading foreign key refs' });
-    const foreignKeys = await this.analyserQuery('foreignKeys', ['tables']);
-
-    this.feedback({ analysingMessage: 'DBGM-00246 Loading foreign key columns' });
-    const fk_keyColumnUsage = await this.analyserQuery('fk_keyColumnUsage', ['tables']);
 
     // const cntKey = x => `${x.constraint_name}|${x.constraint_schema}`;
     const fkRows = [];
@@ -149,50 +149,20 @@ class Analyser extends DatabaseAnalyser {
     }
     fkColumns = { rows: fkRows };
 
-    this.feedback({ analysingMessage: 'DBGM-00247 Loading views' });
-    const views = await this.analyserQuery('views', ['views']);
-
-    this.feedback({ analysingMessage: 'DBGM-00248 Loading materialized views' });
     const matviews = this.driver.dialect.materializedViews ? await this.analyserQuery('matviews', ['matviews']) : null;
-
-    this.feedback({ analysingMessage: 'DBGM-00249 Loading materialized view columns' });
     const matviewColumns = this.driver.dialect.materializedViews
       ? await this.analyserQuery('matviewColumns', ['matviews'])
       : null;
 
-    this.feedback({ analysingMessage: 'DBGM-00250 Loading routines' });
-    const routines = await this.analyserQuery('routines', ['procedures', 'functions']);
-
-    this.feedback({ analysingMessage: 'DBGM-00251 Loading routine parameters' });
-    const routineParametersRows = await this.analyserQuery('proceduresParameters');
-
-    this.feedback({ analysingMessage: 'DBGM-00252 Loading indexes' });
-    const indexes = this.driver.__analyserInternals.skipIndexes
-      ? { rows: [] }
-      : await this.analyserQuery('indexes', ['tables']);
-
-    this.feedback({ analysingMessage: 'DBGM-00253 Loading index columns' });
-    const indexcols = this.driver.__analyserInternals.skipIndexes
-      ? { rows: [] }
-      : await this.analyserQuery('indexcols', ['tables']);
-
-    this.feedback({ analysingMessage: 'DBGM-00254 Loading unique names' });
-    const uniqueNames = await this.analyserQuery('uniqueNames', ['tables']);
-
     let geometryColumns = { rows: [] };
     if (views.rows.find(x => x.pure_name == 'geometry_columns' && x.schema_name == 'public')) {
-      this.feedback({ analysingMessage: 'DBGM-00255 Loading geometry columns' });
       geometryColumns = await this.analyserQuery('geometryColumns', ['tables']);
     }
 
     let geographyColumns = { rows: [] };
     if (views.rows.find(x => x.pure_name == 'geography_columns' && x.schema_name == 'public')) {
-      this.feedback({ analysingMessage: 'DBGM-00256 Loading geography columns' });
       geographyColumns = await this.analyserQuery('geographyColumns', ['tables']);
     }
-
-    this.feedback({ analysingMessage: 'DBGM-00257 Loading triggers' });
-    const triggers = await this.analyserQuery('triggers');
 
     this.feedback({ analysingMessage: 'DBGM-00258 Finalizing DB structure' });
 
@@ -396,11 +366,11 @@ class Analyser extends DatabaseAnalyser {
   }
 
   async _getFastSnapshot() {
-    const viewModificationsQueryData = await this.analyserQuery('viewModifications');
-    const matviewModificationsQueryData = this.driver.dialect.materializedViews
-      ? await this.analyserQuery('matviewModifications')
-      : null;
-    const routineModificationsQueryData = await this.analyserQuery('routineModifications');
+    const [viewModificationsQueryData, matviewModificationsQueryData, routineModificationsQueryData] = await Promise.all([
+      this.analyserQuery('viewModifications'),
+      this.driver.dialect.materializedViews ? this.analyserQuery('matviewModifications') : Promise.resolve(null),
+      this.analyserQuery('routineModifications'),
+    ]);
 
     return {
       tables: null,

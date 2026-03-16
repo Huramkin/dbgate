@@ -118,56 +118,40 @@ class Analyser extends DatabaseAnalyser {
   }
 
   async _runAnalysis() {
-    this.feedback({ analysingMessage: 'DBGM-00218 Loading tables' });
-    const tables = await this.analyserQuery('tables', ['tables']);
-    this.feedback({ analysingMessage: 'DBGM-00219 Loading columns' });
-    const columns = await this.analyserQuery('columns', ['tables', 'views']);
-    this.feedback({ analysingMessage: 'DBGM-00220 Loading primary keys' });
-    const pkColumns = await this.analyserQuery('primaryKeys', ['tables']);
-    this.feedback({ analysingMessage: 'DBGM-00221 Loading foreign keys' });
-    const fkColumns = await this.analyserQuery('foreignKeys', ['tables']);
-    this.feedback({ analysingMessage: 'DBGM-00222 Loading views' });
-    const views = await this.analyserQuery('views', ['views']);
-    this.feedback({ analysingMessage: 'DBGM-00223 Loading programmables' });
-    const programmables = await this.analyserQuery('programmables', ['procedures', 'functions']);
+    this.feedback({ analysingMessage: 'DBGM-00218 Loading database structure' });
 
-    const parameters = await this.analyserQuery('parameters', ['procedures', 'functions']);
+    const [tables, columns, pkColumns, fkColumns, views, programmables, parameters, indexes, uniqueNames, triggers, schedulerEvents] =
+      await Promise.all([
+        this.analyserQuery('tables', ['tables']),
+        this.analyserQuery('columns', ['tables', 'views']),
+        this.analyserQuery('primaryKeys', ['tables']),
+        this.analyserQuery('foreignKeys', ['tables']),
+        this.analyserQuery('views', ['views']),
+        this.analyserQuery('programmables', ['procedures', 'functions']),
+        this.analyserQuery('parameters', ['procedures', 'functions']),
+        this.analyserQuery('indexes', ['tables']),
+        this.analyserQuery('uniqueNames', ['tables']),
+        this.analyserQuery('triggers'),
+        this.analyserQuery('schedulerEvents'),
+      ]);
+
+    this.feedback({ analysingMessage: 'DBGM-00224 Loading view texts' });
+    const viewTexts = await this.getViewTexts(views.rows.map(x => x.pureName));
 
     const functionParameters = parameters.rows.filter(x => x.routineType == 'FUNCTION');
     const functionNameToParameters = functionParameters.reduce((acc, row) => {
       if (!acc[row.pureName]) acc[row.pureName] = [];
-
-      acc[row.pureName].push({
-        ...row,
-        dataType: normalizeTypeName(row.dataType),
-      });
+      acc[row.pureName].push({ ...row, dataType: normalizeTypeName(row.dataType) });
       return acc;
     }, {});
 
     const procedureParameters = parameters.rows.filter(x => x.routineType == 'PROCEDURE');
     const procedureNameToParameters = procedureParameters.reduce((acc, row) => {
       if (!acc[row.pureName]) acc[row.pureName] = [];
-
-      acc[row.pureName].push({
-        ...row,
-        dataType: normalizeTypeName(row.dataType),
-      });
+      acc[row.pureName].push({ ...row, dataType: normalizeTypeName(row.dataType) });
       return acc;
     }, {});
 
-    this.feedback({ analysingMessage: 'DBGM-00224 Loading view texts' });
-    const viewTexts = await this.getViewTexts(views.rows.map(x => x.pureName));
-    this.feedback({ analysingMessage: 'DBGM-00225 Loading indexes' });
-    const indexes = await this.analyserQuery('indexes', ['tables']);
-    this.feedback({ analysingMessage: 'DBGM-00226 Loading uniques' });
-
-    this.feedback({ analysingMessage: 'DBGM-00227 Loading triggers' });
-    const triggers = await this.analyserQuery('triggers');
-
-    this.feedback({ analysingMessage: 'DBGM-00228 Loading scheduler events' });
-    const schedulerEvents = await this.analyserQuery('schedulerEvents');
-
-    const uniqueNames = await this.analyserQuery('uniqueNames', ['tables']);
     this.feedback({ analysingMessage: 'DBGM-00229 Finalizing DB structure' });
 
     const res = {
@@ -274,11 +258,14 @@ class Analyser extends DatabaseAnalyser {
   }
 
   async _getFastSnapshot() {
-    const tableModificationsQueryData = await this.analyserQuery('tableModifications');
-    const procedureModificationsQueryData = await this.analyserQuery('procedureModifications');
-    const functionModificationsQueryData = await this.analyserQuery('functionModifications');
-    const schedulerEvents = await this.analyserQuery('schedulerEventsModifications');
-    const triggers = await this.analyserQuery('triggersModifications');
+    const [tableModificationsQueryData, procedureModificationsQueryData, functionModificationsQueryData, schedulerEvents, triggers] =
+      await Promise.all([
+        this.analyserQuery('tableModifications'),
+        this.analyserQuery('procedureModifications'),
+        this.analyserQuery('functionModifications'),
+        this.analyserQuery('schedulerEventsModifications'),
+        this.analyserQuery('triggersModifications'),
+      ]);
 
     return {
       tables: tableModificationsQueryData.rows
