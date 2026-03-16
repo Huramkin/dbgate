@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useTabStore, type TabDefinition } from '@/stores/tabStore';
 import { useAppStore } from '@/stores/appStore';
 import { shouldShowTab } from './TabsPanel';
+import tabComponents from '@/tabs';
+import LoadingInfo from '@/elements/LoadingInfo';
 
 interface TabContentProps {
   multiTabIndex: number;
@@ -30,14 +32,27 @@ export default function TabContent({ multiTabIndex }: TabContentProps) {
     );
   }
 
-  return (
-    <div className="relative flex-1 h-full overflow-hidden" data-testid="TabContent">
-      <div className="absolute inset-0 flex flex-col">
-        <div className="flex-1 p-4 overflow-auto">
-          <div className="text-sm text-muted-foreground">
-            Tab: {activeTab.title} ({activeTab.tabComponent})
+  const tabInfo = tabComponents[activeTab.tabComponent];
+  if (!tabInfo) {
+    return (
+      <div className="flex items-center justify-center h-full text-muted-foreground">
+        <div className="text-center">
+          <div className="text-sm">
+            Unknown tab component: {activeTab.tabComponent}
           </div>
         </div>
+      </div>
+    );
+  }
+
+  const TabComponent = tabInfo.default;
+
+  return (
+    <div className="relative flex-1 h-full overflow-hidden" data-testid="TabContent">
+      <div className="absolute inset-0">
+        <Suspense fallback={<LoadingInfo message="Loading tab..." wrapper />}>
+          <TabComponent {...activeTab.props} tabid={activeTab.tabid} />
+        </Suspense>
       </div>
     </div>
   );
