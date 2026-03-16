@@ -203,5 +203,45 @@ pnpm plugin                      # compile and install plugin
 
 After restarting DbGate, your new plugin will be available.
 
+## Encryption key
+
+DbGate encrypts saved database passwords (in `~/.dbgate/connections.jsonl`) using an encryption key. The key is stored as **plain text hex string** in `~/.dbgate/.key`.
+
+### How it works
+
+- On first start, a random 64-character hex key is generated and saved to `~/.dbgate/.key`
+- This key is used to encrypt/decrypt password fields in connection configs
+- Passwords in `connections.jsonl` are stored as `crypt:...` prefixed encrypted strings
+- The `.key` file is a plain text file you can open and read directly
+
+### Replace the encryption key
+
+**Method 1: Environment variable** (recommended for Docker/server)
+```sh
+export DBGATE_ENCRYPTION_KEY="your-64-char-hex-key-here"
+pnpm start
+```
+
+**Method 2: Edit the key file**
+```sh
+# Generate a new random key
+openssl rand -hex 32
+
+# Replace the key file content
+echo "your-new-64-char-hex-key" > ~/.dbgate/.key
+```
+
+> **Warning**: Changing the encryption key will make previously saved passwords unreadable. You will need to re-enter all database passwords after changing the key.
+
+### Command line argument
+```sh
+node src/index.js --encryption-key "your-64-char-hex-key"
+```
+
+### Priority order
+1. `--encryption-key` command line argument (highest)
+2. `DBGATE_ENCRYPTION_KEY` environment variable
+3. `~/.dbgate/.key` file (auto-generated if missing)
+
 ## Logging
 DbGate uses [pinomin logger](https://github.com/dbgate/pinomin). So by default, it produces JSON log messages into console and log files. If you want to see formatted logs, please use [pino-pretty](https://github.com/pinojs/pino-pretty) log formatter.

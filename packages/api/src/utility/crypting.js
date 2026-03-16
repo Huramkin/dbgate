@@ -7,54 +7,103 @@ const _ = require('lodash');
 const { datadir } = require('./directories');
 const { encryptionKeyArg } = require('./processArgs');
 
-const defaultEncryptionKey = 'mQAUaXhavRGJDxDTXSCg7Ej0xMmGCrx6OKA07DIMBiDcYYkvkaXjTAzPUEHEHEf9';
+const OLD_DEFAULT_KEY = 'mQAUaXhavRGJDxDTXSCg7Ej0xMmGCrx6OKA07DIMBiDcYYkvkaXjTAzPUEHEHEf9';
 
 let _encryptionKey = null;
+
+function migrateOldKeyFile(keyFile) {
+  try {
+    const encryptedData = fs.readFileSync(keyFile, 'utf-8');
+    if (/^[0-9a-f]{64}$/i.test(encryptedData.trim())) {
+      return null;
+    }
+    const oldEncryptor = simpleEncryptor.createEncryptor(OLD_DEFAULT_KEY);
+    const data = oldEncryptor.decrypt(encryptedData);
+    if (data && data.encryptionKey) {
+      fs.writeFileSync(keyFile, data.encryptionKey, 'utf-8');
+      return data.encryptionKey;
+    }
+  } catch (err) {
+    // not an old format file
+  }
+  return null;
+}
 
 function loadEncryptionKey() {
   if (encryptionKeyArg) {
     return encryptionKeyArg;
   }
+
+  if (process.env.DBGATE_ENCRYPTION_KEY) {
+    _encryptionKey = process.env.DBGATE_ENCRYPTION_KEY;
+    return _encryptionKey;
+  }
+
   if (_encryptionKey) {
     return _encryptionKey;
   }
-  const encryptor = simpleEncryptor.createEncryptor(defaultEncryptionKey);
 
   const keyFile = path.join(datadir(), '.key');
 
   if (!fs.existsSync(keyFile)) {
-    const generatedKey = crypto.randomBytes(32);
-    const newKey = generatedKey.toString('hex');
-    const result = {
-      encryptionKey: newKey,
-    };
-    fs.writeFileSync(keyFile, encryptor.encrypt(result), 'utf-8');
+    const newKey = crypto.randomBytes(32).toString('hex');
+    fs.writeFileSync(keyFile, newKey, 'utf-8');
+    _encryptionKey = newKey;
+    return _encryptionKey;
   }
 
-  const encryptedData = fs.readFileSync(keyFile, 'utf-8');
-  const data = encryptor.decrypt(encryptedData);
-  _encryptionKey = data['encryptionKey'];
+  const fileContent = fs.readFileSync(keyFile, 'utf-8').trim();
+
+  if (/^[0-9a-f]{64}$/i.test(fileContent)) {
+    _encryptionKey = fileContent;
+    return _encryptionKey;
+  }
+
+  const migrated = migrateOldKeyFile(keyFile);
+  if (migrated) {
+    _encryptionKey = migrated;
+    return _encryptionKey;
+  }
+
+  const newKey = crypto.randomBytes(32).toString('hex');
+  fs.writeFileSync(keyFile, newKey, 'utf-8');
+  _encryptionKey = newKey;
   return _encryptionKey;
 }
 
 async function loadEncryptionKeyFromExternal(storedValue, setStoredValue) {
-  const encryptor = simpleEncryptor.createEncryptor(defaultEncryptionKey);
-
-  if (!storedValue) {
-    const generatedKey = crypto.randomBytes(32);
-    const newKey = generatedKey.toString('hex');
-    const result = {
-      encryptionKey: newKey,
-    };
-    await setStoredValue(encryptor.encrypt(result));
-
-    setEncryptionKey(newKey);
-
+  if (process.env.DBGATE_ENCRYPTION_KEY) {
+    setEncryptionKey(process.env.DBGATE_ENCRYPTION_KEY);
     return;
   }
 
-  const data = encryptor.decrypt(storedValue);
-  setEncryptionKey(data['encryptionKey']);
+  if (!storedValue) {
+    const newKey = crypto.randomBytes(32).toString('hex');
+    await setStoredValue(newKey);
+    setEncryptionKey(newKey);
+    return;
+  }
+
+  if (/^[0-9a-f]{64}$/i.test(storedValue.trim())) {
+    setEncryptionKey(storedValue.trim());
+    return;
+  }
+
+  try {
+    const oldEncryptor = simpleEncryptor.createEncryptor(OLD_DEFAULT_KEY);
+    const data = oldEncryptor.decrypt(storedValue);
+    if (data && data.encryptionKey) {
+      await setStoredValue(data.encryptionKey);
+      setEncryptionKey(data.encryptionKey);
+      return;
+    }
+  } catch (err) {
+    // not old format
+  }
+
+  const newKey = crypto.randomBytes(32).toString('hex');
+  await setStoredValue(newKey);
+  setEncryptionKey(newKey);
 }
 
 let _encryptor = null;
@@ -179,18 +228,11 @@ function getEncryptionKey() {
 }
 
 function generateTransportEncryptionKey() {
-  const encryptor = simpleEncryptor.createEncryptor(defaultEncryptionKey);
-  const result = {
-    encryptionKey: crypto.randomBytes(32).toString('hex'),
-  };
-  return encryptor.encrypt(result);
+  return crypto.randomBytes(32).toString('hex');
 }
 
-function createTransportEncryptor(encryptionData) {
-  const encryptor = simpleEncryptor.createEncryptor(defaultEncryptionKey);
-  const data = encryptor.decrypt(encryptionData);
-  const res = simpleEncryptor.createEncryptor(data['encryptionKey']);
-  return res;
+function createTransportEncryptor(encryptionKey) {
+  return simpleEncryptor.createEncryptor(encryptionKey);
 }
 
 function recryptObjectPasswordField(obj, field, decryptEncryptor, encryptEncryptor) {
