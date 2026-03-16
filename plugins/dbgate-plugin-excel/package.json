@@ -25,11 +25,11 @@
     "build:frontend": "webpack --config webpack-frontend.config",
     "build:frontend:watch": "webpack --watch --config webpack-frontend.config",
     "build:backend": "webpack --config webpack-backend.config.js",
-    "build": "yarn build:frontend && yarn build:backend",
-    "plugin": "yarn build && dbgate-plugin dbgate-plugin-excel",
-    "copydist": "yarn build && yarn pack && dbgate-copydist ../dist/dbgate-plugin-excel",
+    "build": "pnpm build:frontend && pnpm build:backend",
+    "plugin": "pnpm build && dbgate-plugin dbgate-plugin-excel",
+    "copydist": "pnpm build && pnpm pack && dbgate-copydist ../dist/dbgate-plugin-excel",
     "plugout": "dbgate-plugout dbgate-plugin-excel",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "pnpm build"
   },
   "devDependencies": {
     "dbgate-plugin-tools": "^1.0.7",

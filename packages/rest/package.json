@@ -17,7 +17,7 @@
   "scripts": {
     "build": "tsc",
     "start": "tsc --watch",
-    "prepublishOnly": "yarn build",
+    "prepublishOnly": "pnpm build",
     "test": "jest",
     "test:ci": "jest --json --outputFile=result.json --testLocationInResults"
   },
