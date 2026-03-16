@@ -1,5 +1,5 @@
 function isProApp() {
-  return false;
+  return true;
 }
 
 function checkLicense(license) {

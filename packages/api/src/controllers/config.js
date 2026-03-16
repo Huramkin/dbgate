@@ -261,23 +261,7 @@ module.exports = {
 
   startTrial_meta: true,
   async startTrial() {
-    try {
-      const fingerprint = await getPublicHardwareFingerprint();
-
-      const resp = await axios.default.post(`${getAuthProxyUrl()}/trial-license`, {
-        type: 'premium-trial',
-        days: 30,
-        fingerprint,
-      });
-      const { token } = resp.data;
-
-      return await this.saveLicenseKey({ licenseKey: token });
-    } catch (err) {
-      return {
-        status: 'error',
-        errorMessage: err.message,
-      };
-    }
+    return { status: 'ok' };
   },
 
   updateSettings_meta: true,

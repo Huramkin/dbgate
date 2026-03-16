@@ -15,7 +15,7 @@ import { isAdminPage, isOneOfPage } from './pageDefs';
 import { openWebLink } from './simpleTools';
 import { serializeJsTypesReplacer } from 'dbgate-tools';
 import { cloudSigninTokenHolder, selectedWidget } from '../stores';
-import LicenseLimitMessageModal from '../modals/LicenseLimitMessageModal.svelte';
+
 
 export const strmid = uuidv1();
 
@@ -123,14 +123,7 @@ async function processApiResponse(route, args, resp) {
     //   missingCredentials: true,
     // };
   } else if (resp?.apiErrorMessage) {
-    if (resp?.apiErrorIsLicenseLimit) {
-      showModal(LicenseLimitMessageModal, {
-        message: resp.apiErrorMessage,
-        licenseLimits: resp.apiErrorLimitedLicenseLimits,
-      });
-    } else {
-      showSnackbarError('API error:' + resp?.apiErrorMessage);
-    }
+    showSnackbarError('API error:' + resp?.apiErrorMessage);
     return {
       errorMessage: resp.apiErrorMessage,
     };

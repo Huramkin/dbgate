@@ -56,28 +56,8 @@ function registerExpressStatic(app, publicDir) {
 
       let html = await fs.readFile(filePath, 'utf8');
 
-      if (process.env.DBGATE_GTM_ID) {
-        html = html.replace(
-          /<!--HEAD_SCRIPT-->/g,
-          `<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','${process.env.DBGATE_GTM_ID}');</script>
-    <!-- End Google Tag Manager -->`
-        );
-        html = html.replace(
-          /<!--BODY_SCRIPT-->/g,
-          process.env.PAGE_BODY_SCRIPT ??
-            `<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=${process.env.DBGATE_GTM_ID}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->`
-        );
-      } else {
-        html = html.replace(/<!--HEAD_SCRIPT-->/g, process.env.PAGE_HEAD_SCRIPT ?? '');
-        html = html.replace(/<!--BODY_SCRIPT-->/g, process.env.PAGE_BODY_SCRIPT ?? '');
-      }
+      html = html.replace(/<!--HEAD_SCRIPT-->/g, process.env.PAGE_HEAD_SCRIPT ?? '');
+      html = html.replace(/<!--BODY_SCRIPT-->/g, process.env.PAGE_BODY_SCRIPT ?? '');
 
       res.type('html').send(html);
     } catch (err) {

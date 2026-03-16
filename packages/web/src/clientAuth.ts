@@ -135,36 +135,11 @@ export async function handleAuthOnStartup(config) {
   }
 
   function checkInvalidLicense() {
-    if (!isProApp()) {
-      return;
-    }
-    if (!config.isLicenseValid) {
-      if (config.storageDatabase || getElectron()) {
-        if (isAdminPage()) {
-          internalRedirectTo(`/admin-license.html`);
-        } else {
-          internalRedirectTo(`/license.html`);
-        }
-      } else {
-        internalRedirectTo(`/error.html`);
-      }
-      return true;
-    }
+    return;
   }
 
   function checkTrialDaysLeft() {
-    if (!isProApp()) {
-      return;
-    }
-    if (
-      config.trialDaysLeft != null &&
-      config.trialDaysLeft <= 14 &&
-      !sessionStorage.getItem('continueTrialConfirmed') &&
-      getElectron()
-    ) {
-      internalRedirectTo(`/license.html`);
-      return true;
-    }
+    return;
   }
 
   function checkLoggedUser() {

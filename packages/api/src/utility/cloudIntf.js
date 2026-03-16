@@ -349,14 +349,7 @@ async function callCloudApiGet(endpoint, signinHolder = null, additionalHeaders 
 }
 
 async function getCloudInstanceHeaders() {
-  if (!(await fs.exists(path.join(datadir(), 'cloud-instance.txt')))) {
-    const newInstanceId = crypto.randomUUID();
-    await fs.writeFile(path.join(datadir(), 'cloud-instance.txt'), newInstanceId);
-  }
-  const instanceId = await fs.readFile(path.join(datadir(), 'cloud-instance.txt'), 'utf-8');
-  return {
-    'x-cloud-instance': instanceId,
-  };
+  return {};
 }
 
 async function callCloudApiPost(endpoint, body, signinHolder = null) {
@@ -471,15 +464,7 @@ function removeCloudCachedConnection(folid, cntid) {
 }
 
 async function getPublicIpInfo() {
-  try {
-    const resp = await axios.default.get(`${DBGATE_CLOUD_URL}/ipinfo`);
-    if (!resp.data?.ip) {
-      return { ip: 'unknown-ip' };
-    }
-    return resp.data;
-  } catch (err) {
-    return { ip: 'unknown-ip' };
-  }
+  return { ip: 'disabled' };
 }
 
 async function getPromoWidgetData() {
