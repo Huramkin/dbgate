@@ -24,11 +24,11 @@
     "build:frontend": "webpack --config webpack-frontend.config",
     "build:frontend:watch": "webpack --watch --config webpack-frontend.config",
     "build:backend": "webpack --config webpack-backend.config.js",
-    "build": "yarn build:frontend && yarn build:backend",
-    "plugin": "yarn build && yarn pack && dbgate-plugin dbgate-plugin-mongo",
-    "copydist": "yarn build && yarn pack && dbgate-copydist ../dist/dbgate-plugin-mongo",
+    "build": "pnpm build:frontend && pnpm build:backend",
+    "plugin": "pnpm build && pnpm pack && dbgate-plugin dbgate-plugin-mongo",
+    "copydist": "pnpm build && pnpm pack && dbgate-copydist ../dist/dbgate-plugin-mongo",
     "plugout": "dbgate-plugout dbgate-plugin-mongo",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "pnpm build"
   },
   "devDependencies": {
     "dbgate-plugin-tools": "^1.0.7",
